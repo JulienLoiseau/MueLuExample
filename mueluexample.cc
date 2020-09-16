@@ -15,6 +15,8 @@ using toperator = Tpetra::Operator<double,int,int>;
 
 int main(int argc, char* argv[]){
 
+  MPI_Init(&argc,&argv); 
+
   Tpetra::MatrixMarket::Reader<CrsMatrix_type> rd;
   Teuchos::RCP<const Comm_type> comm = Teuchos::DefaultComm<int>::getComm();
   const Teuchos::RCP<CrsMatrix_type> A = rd.readSparseFile("matrix_a.mm",comm); 
@@ -51,5 +53,10 @@ int main(int argc, char* argv[]){
     A->apply(x_itr, Adx);                  //     Adx = A * dx 
     r.update(-1, Adx, 0);               //     r = y - A * dx
   }
+
+
+  MPI_Barrier(MPI_COMM_WORLD); 
+  MPI_Finalize(); 
+
   return 0; 
 } 
